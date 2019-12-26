@@ -50,83 +50,53 @@ int main(int argc, char *argv[])
 
 	luaL_dofile(L, "Test.lua");
 
-	lua_getglobal(L, "name");
-	const char* strName = lua_tostring(L, -1);
-	printf("/////////////////////////////////////printf begin \n");
-	printf("name: %s\n", strName);
+	printf("//////////////////////////////C++ \n");
+	lua_getglobal(L, "name");	
+	printf("name: %s\n", lua_tostring(L, -1));
 
-	StackDump(L, 1);
 	lua_pop(L, 1);
 
-	lua_pushstring(L, "my name is lua setglobal ");
+	lua_getglobal(L, "nameTable");
+
+	lua_getfield(L, -1, "sex");
+	lua_getfield(L, -2, "age");
+
+	StackDump(L, 1);
+	
+	printf("age: %d\n", lua_tointeger(L, -1));
+	printf("sex: %s\n", lua_tostring(L, -2));
+	lua_settop(L, 0);
+
+	lua_pushstring(L, "modify my name is lua");
 	lua_setfield(L, LUA_GLOBALSINDEX, "name");
 	StackDump(L, 2);
 
 	lua_getglobal(L, "name");
 	StackDump(L, 3);
-	printf("setglobal name: %s\n", lua_tostring(L, -1));
+	printf("modify name: %s\n", lua_tostring(L, -1));
 
 	lua_settop(L, 0);
 
 	lua_getglobal(L, "nameTable");
 
-	//lua_pushstring(L, "sex");
-	//lua_gettable(L, -2);
-
-	//lua_pushstring(L, "age");
-	//lua_gettable(L, -3);
-
-	lua_getfield(L, -1, "sex");
-	lua_getfield(L, -2, "age");
-
-	StackDump(L, 4);
-
-	int iAge = (int)lua_tointeger(L, -1);
-	const char* strSex = lua_tostring(L, -2);
-	
-	printf("age: %d\n", iAge);
-	printf("sex: %s\n", strSex);
-	
-	//lua_pushstring(L, "age");
-	//lua_pushnumber(L, 19);
-	//lua_settable(L, 1);
-
-
 	lua_pushnumber(L, 19);
 	lua_setfield(L, 1, "age");
 
-	//lua_pushstring(L, "age");
-	//lua_gettable(L, 1);	
+	StackDump(L, 4);
 
 	lua_getfield(L, 1, "age");
-
+	printf("modify age: %d\n", (int)lua_tointeger(L, -1));
 	StackDump(L, 5);
 	
-	printf("setglobal age: %d\n", (int)lua_tointeger(L, -1));
-
 
 	lua_getglobal(L, "PrintLuaLog");
 	lua_pcall(L, 0, 0, 0);
-	StackDump(L, 6);
 
 	lua_getglobal(L, "AddIncrease");
 	lua_pcall(L, 0, 0, 0);
 
 	lua_getglobal(L, "PrintLuaLog");
 	lua_pcall(L, 0, 0, 0);
-
-	lua_settop(L, 0);
-	lua_getglobal(L, "iVar");
-	printf("iVar: %d\n", lua_tointeger(L, -1));
-
-	lua_pop(L, 1);
-
-	lua_getglobal(L, "nameTable");
-	lua_getfield(L, -1, "age");
-
-	printf("age: %d\n", lua_tointeger(L, -1));
-
-	StackDump(L, 7);
 
 
 	lua_close(L);
